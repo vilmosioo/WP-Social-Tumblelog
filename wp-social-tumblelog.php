@@ -2,11 +2,10 @@
 /*
 Plugin Name: WP Social Tumblelog
 Plugin URI: TODO
-Description: TODO 
+Description: A WordPress plugin that allows users to automatically generate a tumblelog from their various social networks. 
 Version: 0.0.1
-Author: TODO
-Author URI: TODO
-Author Email: TODO
+Author: Vilmos Ioo
+Author URI: http://vilmosioo.co.uk
 License: GPL2
 
 	Copyright 2014 TODO  (email : TODO)

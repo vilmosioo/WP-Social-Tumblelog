@@ -1,16 +1,12 @@
 # WP Social Tumblelog
 
-Just another WordPress plugin. 
-
-## Description
-
-TODO Long description
+A WordPress plugin that allows users to automatically generate a tumblelog from their various social networks.
 
 ### Contribute!
 
-If you have suggestions for a new add-on, feel free to email me at TODO. Alternatively, you can fork the plugin from [Gihub]()
+If you have suggestions for a new add-on, feel free to email me at TODO. Alternatively, you can fork the plugin from [Gihub](http://github.com/vilmosioo)
 
-Or follow updates on [Twitter]()!
+Or follow updates on [Twitter](http://twitter.com/vilmosioo)!
  
 ### Installation
 
