@@ -3,6 +3,7 @@ bower_components/
 /components/
 component.json
 .sass-cache/
+.sftp-config.json
 
 #################
 ## Eclipse

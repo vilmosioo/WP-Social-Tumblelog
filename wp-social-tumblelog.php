@@ -46,12 +46,9 @@ class WPSocialTumblelog_Plugin {
 		register_activation_hook(__FILE__, array( &$this, 'activate' ) );
 		register_deactivation_hook(__FILE__, array( &$this, 'deactivate' ) );
 		
-		// TODO write more functionality here
-		if(is_admin()){
-			$this->theme_options();
-		}
+		$this->theme_options();
 	} 
-
+	
 	public function theme_options(){
 		$this->theme_options = WPSocialTumblelog_Options::create();
 	}

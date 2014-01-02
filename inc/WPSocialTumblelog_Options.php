@@ -29,6 +29,7 @@ class WPSocialTumblelog_Options{
 	protected $current;
 
 	const TEXT = 0;
+	const HEADING = 1;
 	const PREFIX = 'WPSocialTumblelog_options_';
 	const ID = 'wp_social_tumblelog';
 
@@ -36,7 +37,26 @@ class WPSocialTumblelog_Options{
 		$options = new WPSocialTumblelog_Options();
 		$options->addTab(array(
 			'name' => 'General',
-			'options' => array()
+			'options' => array(
+				array(
+					'name' => '<h3 class="heading">Social networks</h3>',
+					'type' => WPSocialTumblelog_Options::HEADING,
+				),
+				array(
+					'name' => 'Pinterest',
+					'type' => WPSocialTumblelog_Options::TEXT,
+					'desc' => 'Your Pinterest username.'
+				),
+				array(
+					'name' => 'Goodreads',
+					'type' => WPSocialTumblelog_Options::TEXT,
+					'desc' => 'Your Goodreads username.'
+				),
+				array(
+					'name' => '<h3 class="heading">RSS feeds</h3>',
+					'type' => WPSocialTumblelog_Options::HEADING,
+				)
+			)
 		));
 		$options->addTab(array(
 			'name' => 'Preview',
@@ -123,19 +143,24 @@ class WPSocialTumblelog_Options{
 	* Initializes the theme's options. Called on admin menu action.
 	*/
 	public function init(){
-		add_options_page('Tumblelog', 'Tumblelog', 'manage_options', WPSocialTumblelog_Options::ID, array(&$this, 'settings_page_setup'));
+		$page = add_menu_page('Tumblelog', 'Tumblelog', 'manage_options', WPSocialTumblelog_Options::ID, array(&$this, 'settings_page_setup'));
+		add_action( "admin_print_scripts-$page", array(&$this, 'settings_styles_and_scripts'));
 	}
 
+	public function settings_styles_and_scripts(){
+		wp_enqueue_script('wpsocial-tumblelog-settings-page-script', WP_SOCIAL_TUMBLELOG_PLUGIN_URL. 'js/admin.js');
+		wp_enqueue_style('wpsocial-tumblelog-settings-page-style', WP_SOCIAL_TUMBLELOG_PLUGIN_URL. 'css/admin.css');
+	}
 	/*
 	* Settings page set up
 	*
 	* Handles the display of the Theme Options page (under Appearance)
 	*/
 	public function settings_page_setup() {
-		echo '<div class="wrap">';
+		echo '<div class="wrap wpsocialtumblelog-options">';
 		$this->page_tabs() ;
 		if ( isset( $_GET['settings-updated'] ) ) {
-			echo "<div class='updated'><p>Theme settings updated successfully.</p></div>";
+			echo "<div class='updated'><p>Tumblelog settings updated successfully.</p></div>";
 		} 
 		?>
 		<form method="post" action="options.php">
@@ -190,8 +215,11 @@ class WPSocialTumblelog_Options{
 	}
 
 	public function section_handler($args){
-		$id = substr($args['id'], 16); // 16 is the length of the section prefix:WPSocialTumblelog_Options::PREFIX		echo "<h2 class='section'>".$this->tabs[$id]['title']."</h2>"; 
-		echo "<p>".$this->tabs[$id]['desc']."</p>"; 
+		$id = substr($args['id'], 16); // 16 is the length of options_section_
+		if(!empty($this->tabs[$id]['title'])){
+			echo "<h2 class='section'>".$this->tabs[$id]['title']."</h2>"; 
+		}
+		echo $this->tabs[$id]['desc']; 
 	}
 
 	public function input_handler($args){
@@ -200,15 +228,17 @@ class WPSocialTumblelog_Options{
 		$name = WPSocialTumblelog_Options::PREFIX.$args['tab']."[$id]";
 		$values = get_option(WPSocialTumblelog_Options::PREFIX.$args['tab']);
 		$value = $values[$id];
-		
+		$desc = $option['desc'];
+
 		switch ($option['type']) {
+			case WPSocialTumblelog_Options::HEADING:
+				echo "</td></tr><tr valign=\"top\"><td colspan=\"2\" class='heading_text'>$desc</td></tr>";
+			break;
 			default:
-				echo "<input type='text' id='$id' name='$name' value='$value'>"; 
+				echo "<input type='text' id='$id' name='$name' value='$value'>";
+				echo "<br><span class='description'>$desc</span>"; 
 			break;
 		}
-
-		if ( $option['desc'] != '' )
-			echo '<br /><span class="description">' . $option['desc'] . '</span>';
 	}
 }
 ?>
