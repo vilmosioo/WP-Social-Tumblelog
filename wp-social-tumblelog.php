@@ -8,7 +8,7 @@ Author: Vilmos Ioo
 Author URI: http://vilmosioo.co.uk
 License: GPL2
 
-	Copyright 2014 TODO  (email : TODO)
+	Copyright 2014 Vilmos Ioo
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as 
@@ -28,18 +28,16 @@ License: GPL2
 // Define constants
 define('WP_SOCIAL_TUMBLELOG_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('WP_SOCIAL_TUMBLELOG_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WP_SOCIAL_TUMBLELOG_PLUGIN_WORDPRESS_VERSION', get_bloginfo( 'version' ));
 
 // Includes
-// require_once(WP_SOCIAL_TUMBLELOG_PLUGIN_DIR.'bower_components/wordpress-tools-.php');
+require_once(WP_SOCIAL_TUMBLELOG_PLUGIN_DIR.'inc/WPSocialTumblelog_Options.php');
 
 class WPSocialTumblelog_Plugin {
-	
+	private $theme_options;
+
 	static function init(){
 		return new WPSocialTumblelog_Plugin();
 	}
-
-	const ID = 'WP_SOCIAL_TUMBLELOG';
 
 	/**
 	 * Initializes the plugin by setting localization, filters, and administration functions.
@@ -49,7 +47,14 @@ class WPSocialTumblelog_Plugin {
 		register_deactivation_hook(__FILE__, array( &$this, 'deactivate' ) );
 		
 		// TODO write more functionality here
+		if(is_admin()){
+			$this->theme_options();
+		}
 	} 
+
+	public function theme_options(){
+		$this->theme_options = WPSocialTumblelog_Options::create();
+	}
 
 	/**
 	 * Fired when the plugin is activated.

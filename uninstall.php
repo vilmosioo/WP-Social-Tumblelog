@@ -4,7 +4,8 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) )
 		exit();
 // For Single site
 if (!is_multisite()){
-	delete_option('WP_SOCIAL_TUMBLELOG');
+	delete_option('WPSocialTumblelog_options_general');
+	delete_option('WPSocialTumblelog_options_preview');
 } 
 // For Multisite
 else {
@@ -13,7 +14,8 @@ else {
 	$original_blog_id = get_current_blog_id();
 	foreach ($blog_ids as $blog_id){
 		switch_to_blog( $blog_id );
-		delete_option('WP_SOCIAL_TUMBLELOG');
+		delete_option('WPSocialTumblelog_options_general');
+		delete_option('WPSocialTumblelog_options_preview');
 	}
 	switch_to_blog( $original_blog_id );
 }
