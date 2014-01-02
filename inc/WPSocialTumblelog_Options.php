@@ -123,7 +123,7 @@ class WPSocialTumblelog_Options{
 	* Initializes the theme's options. Called on admin menu action.
 	*/
 	public function init(){
-		add_theme_page('Theme Options', 'Theme Options', 'administrator', WPSocialTumblelog_Options::ID, array(&$this, 'settings_page_setup'));
+		add_options_page('Tumblelog', 'Tumblelog', 'manage_options', WPSocialTumblelog_Options::ID, array(&$this, 'settings_page_setup'));
 	}
 
 	/*
