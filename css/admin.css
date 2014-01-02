@@ -7,3 +7,12 @@
 .wpsocialtumblelog-options .social .button{ float:right;}
 .wpsocialtumblelog-options .social .fa{ font-size:3em; vertical-align: middle; display:inline-block; margin:0 15px 0 0;}
 .wpsocialtumblelog-options .social .title{ display:inline-block; margin:0; font-weight: 600; font-size:1.3em;}
+
+.rectangle-list{ counter-reset: li; /* Initiate a counter */ list-style: none; /* Remove default numbering */ *list-style: decimal; /* Keep using default numbering for IE6/7 */ padding: 0; margin: 20px 0; text-shadow: 0 1px 0 rgba(255,255,255,.5); }
+
+.rectangle-list a{ cursor:pointer; -webkit-border-radius:2px; border-radius:2px; position: relative; display: block; padding: .4em .4em .4em .8em; *padding: .4em; margin: .5em 0 .5em 2.5em; background: #ddd; color: #444; text-decoration: none; transition: all .3s ease-out; }
+.rectangle-list a:hover{ background: #eee;}       
+.rectangle-list a:before, .rectangle-list a::before{ -webkit-border-radius:2px; border-radius:2px; content: counter(li); counter-increment: li; position: absolute; left: -2.5em; top: 50%; margin-top: -1em; background: rgb(65,180,255); height: 2em; width: 2em; line-height: 2em; text-align: center; font-weight: bold; color:#fff; }
+.rectangle-list li:nth-child(odd) a:before, .rectangle-list li:nth-child(odd) a::before{ background:#156DA6; }
+.rectangle-list a:after,.rectangle-list a::after{ position: absolute; content: ''; border: .5em solid transparent; border-left-color: rgb(65,180,255); top: 50%; left: -.5em; margin-top: -.5em; transition: all .3s ease-out;  }
+.rectangle-list li:nth-child(odd) a:after, .rectangle-list li:nth-child(odd) a::after{ border-left-color: #156DA6;  } 

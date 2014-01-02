@@ -35,21 +35,20 @@ class WPSocialTumblelog_Options{
 	const PREFIX = 'WPSocialTumblelog_options_';
 	const ID = 'wp_social_tumblelog';
 
+	const GENERAL_TAB = 'General';
+	const GENERAL_TAB_SLUG = 'general';
+	const FEEDS = 'feeds';
+
 	static function create(){
 		$options = new WPSocialTumblelog_Options();
 		$options->addTab(array(
-			'name' => 'General',
+			'name' => WPSocialTumblelog_Options::GENERAL_TAB,
 			'desc' => $options->get_social(),
 			'options' => array(
 				array(
 					'name' => '<h2>RSS feeds</h2>',
-					'type' => WPSocialTumblelog_Options::HEADING,
-					'desc' => "<ul><li><a href='#'>http://google.com</<list>></li></ul>"
-				),
-				array(
-					'name' => 'Add new feed',
 					'type' => WPSocialTumblelog_Options::TEXT_LIVE,
-					'desc' => '<a class="button">Save</a>'
+					'desc' => $options->get_feeds()
 				)
 			)
 		));
@@ -67,8 +66,29 @@ class WPSocialTumblelog_Options{
 		$this->current = ( isset( $_GET['tab'] ) ? $_GET['tab'] : '' ); 
 	}
 
+	public function get_feeds(){
+
+		// initialise options
+		$option = get_option(WPSocialTumblelog_Options::PREFIX.WPSocialTumblelog_Options::GENERAL_TAB_SLUG);
+		$feeds = array();
+
+		if(is_array($option) && array_key_exists(WPSocialTumblelog_Options::FEEDS, $option)){
+			$feeds = $option[WPSocialTumblelog_Options::FEEDS];
+		}
+
+		$s = '<ol class="rectangle-list">';
+		foreach ($feeds as $key => $value) {
+			$s .= "<li><a href='$value'>$value</a></li>";
+		}
+		$s .= '</ol>';
+		$s .= "<input type='text' class='regular-text' value=''>";
+		$s .= '<a class="button">Add new</a>';
+		$s .= '<img class="spinner" src="'.admin_url('images/spinner.gif').'">';
+		return $s;
+	}
+
 	public function get_social(){
-		$s = '<br><h2>Connect</h2>';
+		$s = '<br><h2>Social</h2>';
 		$s .= "<div class='well social'>";
 		$s .= "<p><i class='fa fa-facebook-square'></i><span class='title'>Facebook</span><a class='button'>Connect</a></p>";
 		$s .= "<p><i class='fa fa-twitter'></i><span class='title'>Twitter</span><a class='button'>Connect</a></p>";
@@ -241,8 +261,7 @@ class WPSocialTumblelog_Options{
 				echo "</td></tr><tr valign=\"top\"><td colspan=\"2\" class='heading_text'>$desc</td></tr>";
 			break;
 			case WPSocialTumblelog_Options::TEXT_LIVE:
-				echo "<input type='text' class='regular-text' id='$id' name='$name' value='$value'>";
-				echo "<span class='description'>$desc</span>";
+				echo $desc;
 				break; 
 			default:
 				echo "<input type='text' class='regular-text' id='$id' name='$name' value='$value'>";
