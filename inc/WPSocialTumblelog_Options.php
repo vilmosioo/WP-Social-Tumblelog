@@ -29,7 +29,9 @@ class WPSocialTumblelog_Options{
 	protected $current;
 
 	const TEXT = 0;
-	const HEADING = 1;
+	const LIST_TYPE = 1;
+	const HEADING = 2;
+	const TEXT_LIVE = 3;
 	const PREFIX = 'WPSocialTumblelog_options_';
 	const ID = 'wp_social_tumblelog';
 
@@ -37,24 +39,17 @@ class WPSocialTumblelog_Options{
 		$options = new WPSocialTumblelog_Options();
 		$options->addTab(array(
 			'name' => 'General',
+			'desc' => $options->get_social(),
 			'options' => array(
 				array(
-					'name' => '<h3 class="heading">Social networks</h3>',
+					'name' => '<h2>RSS feeds</h2>',
 					'type' => WPSocialTumblelog_Options::HEADING,
+					'desc' => "<ul><li><a href='#'>http://google.com</<list>></li></ul>"
 				),
 				array(
-					'name' => 'Pinterest',
-					'type' => WPSocialTumblelog_Options::TEXT,
-					'desc' => 'Your Pinterest username.'
-				),
-				array(
-					'name' => 'Goodreads',
-					'type' => WPSocialTumblelog_Options::TEXT,
-					'desc' => 'Your Goodreads username.'
-				),
-				array(
-					'name' => '<h3 class="heading">RSS feeds</h3>',
-					'type' => WPSocialTumblelog_Options::HEADING,
+					'name' => 'Add new feed',
+					'type' => WPSocialTumblelog_Options::TEXT_LIVE,
+					'desc' => '<a class="button">Save</a>'
 				)
 			)
 		));
@@ -70,6 +65,10 @@ class WPSocialTumblelog_Options{
 	public function __construct(){
 		if(!is_admin()) return;
 		$this->current = ( isset( $_GET['tab'] ) ? $_GET['tab'] : '' ); 
+	}
+
+	public function get_social(){
+		return '<h2>Connect</h2><div class="well">List of social networks to connect to</div>';
 	}
 
 	// Add a field to a tab
@@ -234,8 +233,12 @@ class WPSocialTumblelog_Options{
 			case WPSocialTumblelog_Options::HEADING:
 				echo "</td></tr><tr valign=\"top\"><td colspan=\"2\" class='heading_text'>$desc</td></tr>";
 			break;
+			case WPSocialTumblelog_Options::TEXT_LIVE:
+				echo "<input type='text' class='regular-text' id='$id' name='$name' value='$value'>";
+				echo "<span class='description'>$desc</span>";
+				break; 
 			default:
-				echo "<input type='text' id='$id' name='$name' value='$value'>";
+				echo "<input type='text' class='regular-text' id='$id' name='$name' value='$value'>";
 				echo "<br><span class='description'>$desc</span>"; 
 			break;
 		}
