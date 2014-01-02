@@ -68,7 +68,13 @@ class WPSocialTumblelog_Options{
 	}
 
 	public function get_social(){
-		return '<h2>Connect</h2><div class="well">List of social networks to connect to</div>';
+		$s = '<br><h2>Connect</h2>';
+		$s .= "<div class='well social'>";
+		$s .= "<p><i class='fa fa-facebook-square'></i><span class='title'>Facebook</span><a class='button'>Connect</a></p>";
+		$s .= "<p><i class='fa fa-twitter'></i><span class='title'>Twitter</span><a class='button'>Connect</a></p>";
+		$s .= "<p><i class='fa fa-github'></i><span class='title'>Github</span><a class='button'>Connect</a></p>";
+		$s .= "</div>";
+		return $s;
 	}
 
 	// Add a field to a tab
@@ -149,6 +155,7 @@ class WPSocialTumblelog_Options{
 	public function settings_styles_and_scripts(){
 		wp_enqueue_script('wpsocial-tumblelog-settings-page-script', WP_SOCIAL_TUMBLELOG_PLUGIN_URL. 'js/admin.js');
 		wp_enqueue_style('wpsocial-tumblelog-settings-page-style', WP_SOCIAL_TUMBLELOG_PLUGIN_URL. 'css/admin.css');
+		wp_enqueue_style('font-awesome', '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
 	}
 	/*
 	* Settings page set up
