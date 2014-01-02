@@ -16,3 +16,9 @@
 .rectangle-list li:nth-child(odd) a:before, .rectangle-list li:nth-child(odd) a::before{ background:#156DA6; }
 .rectangle-list a:after,.rectangle-list a::after{ position: absolute; content: ''; border: .5em solid transparent; border-left-color: rgb(65,180,255); top: 50%; left: -.5em; margin-top: -.5em; transition: all .3s ease-out;  }
 .rectangle-list li:nth-child(odd) a:after, .rectangle-list li:nth-child(odd) a::after{ border-left-color: #156DA6;  } 
+
+#WPSocialTumblelog_options_spinner{ display:none; vertical-align: text-top; margin:0 0 0 10px; }
+#WPSocialTumblelog_options_error{ color:red; display:none;}
+#WPSocialTumblelog_options_feed.error{
+	border:1px solid red;
+}

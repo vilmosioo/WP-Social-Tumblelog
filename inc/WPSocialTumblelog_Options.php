@@ -76,14 +76,16 @@ class WPSocialTumblelog_Options{
 			$feeds = $option[WPSocialTumblelog_Options::FEEDS];
 		}
 
-		$s = '<ol class="rectangle-list">';
+		$s = '<ol id="'.WPSocialTumblelog_Options::PREFIX.'list" class="rectangle-list">';
 		foreach ($feeds as $key => $value) {
-			$s .= "<li><a href='$value'>$value</a></li>";
+			$s .= "<li><a href='$value' target='_blank'>$value</a></li>";
 		}
 		$s .= '</ol>';
-		$s .= "<input type='text' class='regular-text' value=''>";
-		$s .= '<a class="button">Add new</a>';
-		$s .= '<img class="spinner" src="'.admin_url('images/spinner.gif').'">';
+		$s .= "<input type='text' id='".WPSocialTumblelog_Options::PREFIX."feed' class='regular-text' value=''>";
+		$s .= "<a class='button' id='".WPSocialTumblelog_Options::PREFIX."add_feed' >Add new</a>";
+		$s .= '<img id="'.WPSocialTumblelog_Options::PREFIX.'spinner" src="'.admin_url('images/spinner.gif').'">';
+		$s .= '<p id="'.WPSocialTumblelog_Options::PREFIX.'error"></p>';
+
 		return $s;
 	}
 
@@ -95,6 +97,38 @@ class WPSocialTumblelog_Options{
 		$s .= "<p><i class='fa fa-github'></i><span class='title'>Github</span><a class='button'>Connect</a></p>";
 		$s .= "</div>";
 		return $s;
+	}
+
+	public function add_feed($data){
+		$feed = '';
+		$code = 200;
+		$message = '';
+
+		if(array_key_exists('feed', $_POST)){
+			$feed = $_POST['feed'];
+			if(filter_var($feed, FILTER_VALIDATE_URL)){
+				// initialise options
+				$option = get_option(WPSocialTumblelog_Options::PREFIX.WPSocialTumblelog_Options::GENERAL_TAB_SLUG);
+				if(is_array($option) && array_key_exists(WPSocialTumblelog_Options::FEEDS, $option)){			
+					if(is_array($option[WPSocialTumblelog_Options::FEEDS])){
+						array_push($option[WPSocialTumblelog_Options::FEEDS], $feed);
+					} else {
+						$option[WPSocialTumblelog_Options::FEEDS] = array($feed);
+					}
+				} else {
+					$option[WPSocialTumblelog_Options::FEEDS] = array($feed);
+				}
+
+				update_option(WPSocialTumblelog_Options::PREFIX.WPSocialTumblelog_Options::GENERAL_TAB_SLUG, $option);
+			} else {
+				$code = 400;
+			}
+		}
+
+		die(json_encode(array(
+			'code' => $code,
+			'feed' => $code == 200 ? $feed : 'Invalid feed uri'
+		)));
 	}
 
 	// Add a field to a tab
@@ -160,6 +194,7 @@ class WPSocialTumblelog_Options{
 
 		add_action('admin_menu', array(&$this, 'init'));
 		add_action('admin_init', array(&$this, 'register_mysettings') );
+		add_action( 'wp_ajax_'.WPSocialTumblelog_Options::ID, array(&$this, 'add_feed') );
 	}
 
 	/*
