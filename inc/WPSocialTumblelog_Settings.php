@@ -22,9 +22,11 @@ class WPSocialTumblelog_Settings{
 	private function __construct() {
 		if(!is_admin()) return;
 
+		$ajax_handler = new WPSocialTumblelog_Ajax();
+
 		add_action('admin_menu', array(&$this, 'register_settings_page'));
-		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_ADD_FEED, array('WPSocialTumblelog_Ajax', 'add_feed') );
-		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_REMOVE_FEED, array('WPSocialTumblelog_Ajax', 'remove_feed') );
+		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_ADD_FEED, array(&$ajax_handler, 'add_feed') );
+		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_REMOVE_FEED, array(&$ajax_handler, 'remove_feed') );
 	} 
 
 	public function register_settings_page(){
