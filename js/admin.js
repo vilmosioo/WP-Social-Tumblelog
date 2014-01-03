@@ -2,14 +2,16 @@
 
 var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 
-	var _list , _button, _spinner, _error, _input;
+	var _list , _button, _spinner, _error, _input, _delete, _error_primary;
 
 	var _assign = function(){
-		_list = $('#WPSocialTumblelog_options_list');
-		_button = $('#WPSocialTumblelog_options_add_feed');
-		_spinner = $('#WPSocialTumblelog_options_spinner');
-		_error = $('#WPSocialTumblelog_options_error');
-		_input = $('#WPSocialTumblelog_options_feed');
+		_list = $('#wpsocial-tumblelog-options-list');
+		_button = $('#wpsocial-tumblelog-options-add_feed');
+		_spinner = $('#wpsocial-tumblelog-options-spinner');
+		_error = $('#wpsocial-tumblelog-options-error');
+		_input = $('#wpsocial-tumblelog-options-feed');
+		_delete = $('#wpsocial-tumblelog-options-list .delete');
+		_error_primary = $('#wpsocial-tumblelog-options-error-primary');
 	};
 
 	var _addFeed = function(){
@@ -17,7 +19,7 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 		jQuery.post(
 	    ajaxurl, 
 	    {
-        'action': 'wp_social_tumblelog',
+        'action': 'wp_social_tumblelog_add_feed',
         'feed': _input.val()
 	    }, 
 	    function(response){
@@ -27,27 +29,50 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 
 	    	if(response.code === 200){
 	    		_error.hide();
-	    		_input.removeClass('error');
-	    		_list.append($("<li><a target='_blank' href='" + response.feed + "'>" + response.feed + "</a></li>"));
+	    		_input.removeClass('error').val('');
+	    		var _new = $("<li style='display:none;'><a target='_blank' href='" + response.feed + "'>" + response.feed + "</a><i class='fa fa-minus-circle delete'></i></li>");
+	    		_list.append(_new);
+	    		_new.fadeIn();	    		
 	    	} else {
-	    		_error.show();
 	    		_input.addClass('error');
-	    		_error.text(response.feed);
+	    		_error.show().text(response.feed);
 	    	}
 	    }
 		);
-	
+	};
+
+	var _removeFeed = function(el){
+		el.hide();
+		jQuery.post(
+	    ajaxurl, 
+	    {
+        'action': 'wp_social_tumblelog_remove_feed',
+        'feed': el.text()
+	    }, 
+	    function(response){
+	    	response = JSON.parse(response);
+
+	    	if(response.code === 200){
+	    		el.remove();	    		
+	    		_error_primary.hide();
+	    	} else {
+	    		el.show();
+	    		_error_primary.show().text(response.feed);
+	    	}
+	    }
+		);
 	};
 
 	var _handlers = function(){
-		_input.bind('keypress', function(){
+		_input.on('keypress', function(){
 			if(event.which === 13){
-				event.stopPropagation();
 				_addFeed();
-				return false;
 			}
 		});
-		_button.click(_addFeed);
+		_button.on('click', _addFeed);
+		_list.on('click', '.delete', function(){
+			_removeFeed($(this).parent());
+		});
 	};
 
 	app.init = function(){

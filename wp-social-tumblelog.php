@@ -30,10 +30,9 @@ define('WP_SOCIAL_TUMBLELOG_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('WP_SOCIAL_TUMBLELOG_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 // Includes
-require_once(WP_SOCIAL_TUMBLELOG_PLUGIN_DIR.'inc/WPSocialTumblelog_Options.php');
+require_once(WP_SOCIAL_TUMBLELOG_PLUGIN_DIR.'inc/WPSocialTumblelog_Settings.php');
 
 class WPSocialTumblelog_Plugin {
-	private $theme_options;
 
 	static function init(){
 		return new WPSocialTumblelog_Plugin();
@@ -46,12 +45,8 @@ class WPSocialTumblelog_Plugin {
 		register_activation_hook(__FILE__, array( &$this, 'activate' ) );
 		register_deactivation_hook(__FILE__, array( &$this, 'deactivate' ) );
 		
-		$this->theme_options();
+		WPSocialTumblelog_Settings::init();
 	} 
-	
-	public function theme_options(){
-		$this->theme_options = WPSocialTumblelog_Options::create();
-	}
 
 	/**
 	 * Fired when the plugin is activated.
