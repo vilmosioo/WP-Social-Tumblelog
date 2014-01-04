@@ -30,7 +30,7 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 	    	if(response.code === 200){
 	    		_error.hide();
 	    		_input.removeClass('error').val('');
-	    		var _new = $("<li style='display:none;'><a target='_blank' href='" + response.feed + "'>" + response.feed + "</a><i class='fa fa-minus-circle delete'></i></li>");
+	    		var _new = $("<li style='display:none;'><a target='_blank' href='" + response.feed.url + "'>" + (response.feed.title || respons.feed.url) + "</a><i class='fa fa-minus-circle delete'></i></li>");
 	    		_list.append(_new);
 	    		_new.fadeIn();	    		
 	    	} else {
@@ -47,7 +47,7 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 	    ajaxurl, 
 	    {
         'action': 'wp_social_tumblelog_remove_feed',
-        'feed': el.text()
+        'feed': el.find('a').attr('href')
 	    }, 
 	    function(response){
 	    	response = JSON.parse(response);

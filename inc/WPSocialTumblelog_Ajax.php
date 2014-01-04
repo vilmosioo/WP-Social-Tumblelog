@@ -14,7 +14,10 @@ class WPSocialTumblelog_Ajax{
 
 		// Checks that the object is created correctly
 		if (!is_wp_error($rss)){  
-			return $rss;
+			return array(
+				'url' => $feed,
+				'title' => $rss->get_title()
+			);
 		}
 
 		return false;
@@ -30,14 +33,14 @@ class WPSocialTumblelog_Ajax{
 				// initialise options
 				$option = get_option(WPSocialTumblelog_Resources::DATA);
 				if(is_array($option)){	
-					$key = array_search($feed,$option);
+					$key = $this->get_key($option,$feed);
 					if($key == false){
 						$rss = $this->validate_feed($feed);
 						if($rss == false){
 							$code = 400;
 							$feed = WPSocialTumblelog_Resources::URL_IS_NOT_FEED;
 						} else {
-							array_push($option, $feed);
+							array_push($option, $rss);
 							update_option(WPSocialTumblelog_Resources::DATA, $option);
 						}
 					} else {
@@ -50,7 +53,7 @@ class WPSocialTumblelog_Ajax{
 						$code = 400;
 						$feed = WPSocialTumblelog_Resources::URL_IS_NOT_FEED;
 					} else {
-						$option = array($feed);
+						$option = array($rss);
 						update_option(WPSocialTumblelog_Resources::DATA, $option);
 					}
 				}
@@ -63,21 +66,29 @@ class WPSocialTumblelog_Ajax{
 
 		die(json_encode(array(
 			'code' => $code,
-			'feed' => $feed 
+			'feed' => empty($rss) ? $feed : $rss 
 		)));
 	}
 
-	public function remove_feed($data){
+	private function get_key($array, $feed){
+		foreach ($array as $key => $value) {
+			if($value['url'] == $feed){
+				return $key;
+			}
+		}
+		return false;
+	}
+
+	public function remove_feed(){
 		$feed = '';
 		$code = 200;
-
 		if(array_key_exists('feed', $_POST)){
 			$feed = $_POST['feed'];
 			if(filter_var($feed, FILTER_VALIDATE_URL)){
 				// initialise options
 				$option = get_option(WPSocialTumblelog_Resources::DATA);
 				if(is_array($option)){
-					$key = array_search($feed,$option);
+					$key = $this->get_key($option,$feed);
 					if($key !== false){
 					  unset($option[$key]);
 					  update_option(WPSocialTumblelog_Resources::DATA, $option);
@@ -87,7 +98,7 @@ class WPSocialTumblelog_Ajax{
 					}
 				} else {
 					$code = 400;
-					$feed = WPSocialTumblelog_Resources::INVALID_FEED;
+					$feed = WPSocialTumblelog_Resources::FEED_NOT_FOUND . ' - ' . $feed;
 				}
 			} else {
 				$code = 400;

@@ -17,7 +17,7 @@
 	<?php 
 	$feeds = get_option(WPSocialTumblelog_Resources::DATA);
 	if(is_array($feeds)) foreach ($feeds as $key => $value) {
-		echo "<li><a href='$value' target='_blank'>$value</a><i class='fa fa-minus-circle delete'></i></li>";
+		echo "<li><a href='".$value['url']."' target='_blank'>".(array_key_exists('title', $value) ? $value['title'] : $value['url'])."</a><i class='fa fa-minus-circle delete'></i></li>";
 	}
 	?>
 	</ol>
