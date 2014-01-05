@@ -9,14 +9,15 @@
 
 .rectangle-list{ counter-reset: li; /* Initiate a counter */ list-style: none; /* Remove default numbering */ *list-style: decimal; /* Keep using default numbering for IE6/7 */ padding: 0; margin: 20px 0; text-shadow: 0 1px 0 rgba(255,255,255,.5); }
 
-.rectangle-list li{ cursor:pointer; -webkit-border-radius:2px; font-size:1.1em; border-radius:2px; position: relative; display: block; padding: .4em .8em .4em .8em; *padding: .4em; margin: .5em 0 .5em 2.5em; background: #ddd; color: #444; text-decoration: none; transition: all .5s ease-out; }
+.rectangle-list li{ cursor:pointer; -webkit-border-radius:2px; font-size:1.1em; border-radius:2px; position: relative; display: block; padding: .4em 0.8em .4em .8em; *padding: .4em; margin: .5em 0 .5em 2.5em; background: #ddd; color: #444; text-decoration: none; transition: all .5s ease-out; }
 .rectangle-list li:hover{ background: #eee;}       
 .rectangle-list li:before, .rectangle-list li::before{ -webkit-border-radius:2px; border-radius:2px; content: counter(li); counter-increment: li; position: absolute; left: -2.5em; top: 50%; margin-top: -1em; background: rgb(65,180,255); height: 2em; width: 2em; line-height: 2em; text-align: center; font-weight: bold; color:#fff; }
 .rectangle-list li:nth-child(odd):before, .rectangle-list li:nth-child(odd)::before{ background:#156DA6; }
 .rectangle-list li:after,.rectangle-list li::after{ position: absolute; content: ''; border: .5em solid transparent; border-left-color: rgb(65,180,255); top: 50%; left: -.5em; margin-top: -.5em; transition: all .3s ease-out;  }
 .rectangle-list li:nth-child(odd):after, .rectangle-list li:nth-child(odd)::after{ border-left-color: #156DA6;  } 
 
-#wpsocial-tumblelog-options-list li .delete{ display:none; float:right; font-size:1.35em; color:#666; transition: color 0.5s;}
+#wpsocial-tumblelog-options-list li .feed{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1.5em;}
+#wpsocial-tumblelog-options-list li .delete{ display:none; float:right; font-size:1.25em; color:#666; transition: color 0.5s;}
 #wpsocial-tumblelog-options-list li .delete:hover{ color:#111;}
 #wpsocial-tumblelog-options-list li:hover .delete{ display:inline-block; }
 #wpsocial-tumblelog-options-spinner{ display:none; vertical-align: middle; margin:0 0 5px 5px; }

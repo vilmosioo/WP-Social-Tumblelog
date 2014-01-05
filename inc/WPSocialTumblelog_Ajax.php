@@ -16,7 +16,8 @@ class WPSocialTumblelog_Ajax{
 		if (!is_wp_error($rss)){  
 			return array(
 				'url' => $feed,
-				'title' => $rss->get_title()
+				'title' => $rss->get_title(),
+				'description' => $rss->get_description()
 			);
 		}
 

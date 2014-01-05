@@ -17,7 +17,13 @@
 	<?php 
 	$feeds = get_option(WPSocialTumblelog_Resources::DATA);
 	if(is_array($feeds)) foreach ($feeds as $key => $value) {
-		echo "<li><a href='".$value['url']."' target='_blank'>".(array_key_exists('title', $value) ? $value['title'] : $value['url'])."</a><i class='fa fa-minus-circle delete'></i></li>";
+		echo "<li>";
+		echo "<i class='fa fa-minus-circle delete'></i>";
+		echo "<div class='feed'>";
+		echo "<a href='".$value['url']."' target='_blank'>".(array_key_exists('title', $value) ? $value['title'] : $value['url'])."</a>"; 
+		echo " - <span class='description'>".(array_key_exists('description', $value) ? $value['description'] : '')."</span>"; 
+		echo "</div>";
+		echo "</li>";
 	}
 	?>
 	</ol>
