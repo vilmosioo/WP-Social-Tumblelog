@@ -30,7 +30,7 @@ class WPSocialTumblelog_Settings{
 	} 
 
 	public function register_settings_page(){
-		$page = add_menu_page(
+		$page = add_options_page(
 			WPSocialTumblelog_Resources::PAGE_TITLE, 
 			WPSocialTumblelog_Resources::PAGE_TITLE, 
 			'manage_options', 
