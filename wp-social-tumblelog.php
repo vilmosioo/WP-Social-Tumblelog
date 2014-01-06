@@ -31,6 +31,7 @@ define('WP_SOCIAL_TUMBLELOG_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 // Includes
 require_once(WP_SOCIAL_TUMBLELOG_PLUGIN_DIR.'inc/WPSocialTumblelog_Settings.php');
+require_once(WP_SOCIAL_TUMBLELOG_PLUGIN_DIR.'inc/WPSocialTumblelog_Widget.php');
 
 class WPSocialTumblelog_Plugin {
 
@@ -47,14 +48,20 @@ class WPSocialTumblelog_Plugin {
 		
 		WPSocialTumblelog_Settings::init();
 		add_shortcode('tumblelog', array( &$this, 'display_tumblog' ));
+		add_action( 'widgets_init', array( &$this, 'register_widget' ));
+
 	} 
 
-	private function format_feed($url, $no){
+	public function register_widget(){
+		register_widget( 'WPSocialTumblelog_Widget' );
+	}
+
+	private function format_feed($url){
 		// Get a SimplePie feed object from the specified feed source.
 		$rss = fetch_feed($url); // specify the source feed
 		if (!is_wp_error( $rss ) ) { // Checks that the object is created correctly 
 			// Figure out how many total items there are, but limit it to 5. 
-			$maxitems = $rss->get_item_quantity($no); 
+			$maxitems = $rss->get_item_quantity(); 
 			// Build an array of all the items, starting with element 0 (first element).
 			$rss_items = $rss->get_items(0, $maxitems); 
 		} else {
@@ -73,15 +80,15 @@ class WPSocialTumblelog_Plugin {
 	// display activity chart for a repository
 	public function display_tumblog($atts, $content = null){
 		extract(shortcode_atts(array('wrap_class' => '','item_class' => '', 'count' => 10), $atts));
-		  	
-  	$feed = array();
+		$feed = array();
   	$option = get_option(WPSocialTumblelog_Resources::DATA);
   	foreach ($option as $key => $value) {
-  		$feed += $this->format_feed($value['url'], $count);
+  		$feed += $this->format_feed($value['url']);
   	}
 
   	// sort items descending by date
   	krsort($feed);
+  	$feed = array_slice($feed, 0, is_numeric($count) ? $count : 10);
 
 		$s = "<div class='tumblelog $wrap_class'>";
 
