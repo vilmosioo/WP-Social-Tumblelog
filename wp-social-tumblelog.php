@@ -110,7 +110,10 @@ class WPSocialTumblelog_Plugin {
 	 * @param	boolean	$network_wide	True if WPMU superadmin uses "Network Activate" action, false if WPMU is disabled or plugin is activated on an individual blog 
 	 */
 	public function activate( $network_wide ) {
-
+		$option = get_option(WPSocialTumblelog_Resources::DATA);
+		if(!is_array($option)){
+			update_option(WPSocialTumblelog_Resources::DATA, array());
+		}
 	} 
 
 	/**
