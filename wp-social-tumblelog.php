@@ -71,32 +71,52 @@ class WPSocialTumblelog_Plugin {
 		$feed = array();
 		if ($maxitems != 0) {
 			foreach ($rss_items as $item ){
-				$feed[ strtotime($item->get_date()) ] = $item;
+				$feed[ strtotime($item->get_date()) ] = array(
+					'url' => $item->get_link(),
+					'title' => $item->get_title(),
+					'description' => $item->get_description()
+				);
 			}
 		}
 		return $feed;
   }
 
+	private function format_tweets($data){
+		$tweets = array();
+		foreach ($data as $key => $value) {
+			$tweets[strtotime($value->created_at)] = array(
+				'title' => '@'.$value->user->screen_name,
+				'description' => $value->text,
+				'url' => 'http://twitter.com/'.$value->user->screen_name.'/statuses/'.$value->id
+			);	
+		}
+		return $tweets;
+	}
+
 	// display activity chart for a repository
 	public function display_tumblog($atts, $content = null){
-		extract(shortcode_atts(array('wrap_class' => '','item_class' => '', 'count' => 10), $atts));
+		extract(shortcode_atts(array('wrap_class' => '','item_class' => '', 'count' => 20), $atts));
 		$feed = array();
   	$option = get_option(WPSocialTumblelog_Resources::DATA);
+  	if(!is_array($option) || !array_key_exists('feeds', $option) || !is_array($option['feeds'])) return;
+
+  	$option = $option['feeds'];
   	foreach ($option as $key => $value) {
   		$feed += $this->format_feed($value['url']);
   	}
-
+  	$feed += $this->format_tweets(WPSocialTumblelog_Twitter_API::get_data());
+		
   	// sort items descending by date
   	krsort($feed);
   	$feed = array_slice($feed, 0, is_numeric($count) ? $count : 10);
-
 		$s = "<div class='tumblelog $wrap_class'>";
-
 		foreach($feed as $item){
-			$s .= "<article class='tumblelog-item $item_class'>";
-			$s .= "<h3><a href='".$item->get_link()."' target='_blank'>".$item->get_title()."</a></h3>";
-			$s .= $item->get_description();
-			$s .= "</article>";
+			if(!empty($item['url']) && !empty($item['title']) && !empty($item['description'])){
+				$s .= "<article class='tumblelog-item $item_class'>";
+				$s .= "<h3><a href='$item[url]' target='_blank'>$item[title]</a></h3>";
+				$s .= $item['description'];
+				$s .= "</article>";	
+			}
 		}
 
 		$s .= "</div>";

@@ -2,7 +2,8 @@
 
 var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 
-	var _list , _button, _spinner, _error, _input, _delete, _error_primary;
+	var _list , _button, _spinner, _error, _input, _delete, _error_primary,
+	_social_client_key, _social_client_secret, _social_spinner, _social_error_primary, _social_error, _social_submit, _social_select;
 
 	var _assign = function(){
 		_list = $('#wpsocial-tumblelog-options-list');
@@ -12,6 +13,14 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 		_input = $('#wpsocial-tumblelog-options-feed');
 		_delete = $('#wpsocial-tumblelog-options-list .delete');
 		_error_primary = $('#wpsocial-tumblelog-options-error-primary');
+
+		_social_client_key = $('#wpsocial-client-key');
+		_social_client_secret = $('#wpsocial-client-secret');
+		_social_spinner = $('#wpsocial-spinner');
+		_social_error_primary = $('#wpsocial-error-primary');
+		_social_error = $('#wpsocial-error');
+		_social_submit = $('#wpsocial-submit');
+		_social_select = $('#wpsocial-social');
 	};
 
 	var _addFeed = function(){
@@ -63,6 +72,28 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 		);
 	};
 
+	var _connect = function(){
+		_social_spinner.show();
+		jQuery.post(
+	    ajaxurl, 
+	    {
+        'action': 'wp_social_tumblelog_connect',
+        'social': _social_select.val(),
+        'key': _social_client_key.val(),
+        'secret': _social_client_secret.val()
+	    }, 
+	    function(response){
+	    	response = JSON.parse(response);
+	    	_social_spinner.hide();
+	    	if(response.code === 200){
+	    		_social_error.hide();
+	    	} else {
+	    		_social_error.show().text(response.error);
+	    	}
+	    }
+		);
+	};
+
 	var _handlers = function(){
 		_input.on('keypress', function(){
 			if(event.which === 13){
@@ -73,6 +104,7 @@ var WP_SOCIAL_TUMBLELOG = (function (app, $, window) {
 		_list.on('click', '.delete', function(){
 			_removeFeed($(this).parent());
 		});
+		_social_submit.on('click', _connect);
 	};
 
 	app.init = function(){

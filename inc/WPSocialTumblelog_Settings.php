@@ -27,6 +27,7 @@ class WPSocialTumblelog_Settings{
 		add_action('admin_menu', array(&$this, 'register_settings_page'));
 		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_ADD_FEED, array(&$ajax_handler, 'add_feed') );
 		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_REMOVE_FEED, array(&$ajax_handler, 'remove_feed') );
+		add_action( 'wp_ajax_'.WPSocialTumblelog_Resources::AJAX_ACTION_CONNECT, array(&$ajax_handler, 'connect') );
 	} 
 
 	public function register_settings_page(){
