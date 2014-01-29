@@ -112,7 +112,8 @@ class WPSocialTumblelog_Plugin {
 		$s = "<div class='tumblelog $wrap_class'>";
 		foreach($feed as $item){
 			if(!empty($item['url']) && !empty($item['title']) && !empty($item['description'])){
-				$s .= "<article class='tumblelog-item $item_class'>";
+				$s .= "<article class='tumblelog-item $item_class' data-url='$item[url]'>";
+				$s .= "<i class='tumblelog-item-icon'></i>";
 				$s .= "<h3><a href='$item[url]' target='_blank'>$item[title]</a></h3>";
 				$s .= $item['description'];
 				$s .= "</article>";	
